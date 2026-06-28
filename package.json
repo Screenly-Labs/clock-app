@@ -4,28 +4,25 @@
   "version": "0.0.1",
   "main": "src/index.jsx",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "lint": "biome lint --error-on-warnings .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "sync-fonts": "bun run sync-fonts.js",
     "dev": "wrangler dev",
-    "build": "gulp build",
-    "deploy": "wrangler publish --env=dev"
+    "build": "bun run build.js",
+    "deploy": "wrangler deploy --env=dev"
   },
   "license": "MIT",
   "dependencies": {
-    "hono": "^2.0.7"
+    "@fontsource-variable/fraunces": "^5.2.9",
+    "@fontsource-variable/hanken-grotesk": "^5.2.8",
+    "hono": "^4.12.27"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.1",
-    "@babel/preset-env": "^7.19.1",
-    "@cloudflare/workers-types": "^3.14.1",
-    "@types/jest": "^28.1.6",
-    "esbuild": "^0.14.49",
-    "esbuild-jest": "^0.5.0",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-uglify": "^3.0.2",
-    "gulp-uglifycss": "^1.1.0",
-    "jest": "^28.1.3",
-    "jest-environment-wrangler": "^0.0.31",
-    "wrangler": "^2.0.27"
+    "@biomejs/biome": "^2.5.1",
+    "@cloudflare/workers-types": "^4.20260623.1",
+    "wrangler": "^4.104.0"
   }
 }

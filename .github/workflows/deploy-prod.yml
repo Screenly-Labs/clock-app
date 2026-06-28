@@ -11,13 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn install
-      - run: yarn build
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      - run: bun install --frozen-lockfile
+      - name: Lint (Biome)
+        run: bun run lint
+      - name: Test
+        run: bun test
+      - run: bun run build
       - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           environment: production
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: publish --env production
+          command: deploy --env production
