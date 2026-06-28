@@ -22,19 +22,23 @@ const Layout = (props) => html`<!DOCTYPE html>
         crossorigin
       />
       <link rel="stylesheet" href="/static/styles/main.css?v=${props.v}" />
-      <script
-        src="https://js.sentry-cdn.com/${props.sentryId}.min.js"
-        crossorigin="anonymous"
-      ></script>
-      <!-- Google tag (gtag.js) -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=${props.gaId}"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+      ${props.sentryId
+        ? html`<script
+            src="https://js.sentry-cdn.com/${props.sentryId}.min.js"
+            crossorigin="anonymous"
+          ></script>`
+        : ''}
+      ${props.gaId
+        ? html`<!-- Google tag (gtag.js) -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=${props.gaId}"></script>
+          <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-        gtag('config', '${props.gaId}');
-      </script>
+            gtag('config', '${props.gaId}');
+          </script>`
+        : ''}
       <script src="/static/js/main.js?v=${props.v}" async defer></script>
     </head>
     <body>

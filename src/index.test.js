@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, mock } from 'bun:test'
 import { jsx } from 'hono/jsx'
 import App from './components/App'
+import { gaIds, sentryIds } from './constants'
 
 // The Cloudflare static-assets middleware and its build-time manifest only
 // exist in the Workers runtime; stub both before importing the app.
@@ -103,6 +104,37 @@ describe('Page render (/ route)', () => {
 
     expect(res.status).toBe(200)
     expect(await res.text()).toBe('CACHED PAGE')
+  })
+})
+
+describe('Analytics integration (gtag.js / Sentry)', () => {
+  const render = (env) =>
+    jsx(App, { env, country: 'US', timezone: 'America/New_York', v: 'x' }).toString()
+
+  it('injects the environment-specific GA measurement ID and Sentry DSN', () => {
+    const body = render('production')
+    expect(body).toContain(`gtag/js?id=${gaIds.production}`)
+    expect(body).toContain(`gtag('config', '${gaIds.production}')`)
+    expect(body).toContain(`https://js.sentry-cdn.com/${sentryIds.production}.min.js`)
+  })
+
+  it('uses the stage IDs under the stage environment', () => {
+    const body = render('stage')
+    expect(body).toContain(`gtag/js?id=${gaIds.stage}`)
+    expect(body).toContain(`gtag('config', '${gaIds.stage}')`)
+    expect(body).toContain(`https://js.sentry-cdn.com/${sentryIds.stage}.min.js`)
+  })
+
+  it('omits the GA and Sentry tags entirely when ENV is unset', () => {
+    // Local dev, `wrangler dev`, and the default *.workers.dev deploy have no
+    // ENV var, so gaIds[env]/sentryIds[env] are undefined. The snippet must be
+    // skipped rather than rendered with an empty id (which would load gtag.js
+    // with no measurement ID and ping GA / Sentry with junk requests).
+    const body = render(undefined)
+    expect(body).not.toContain('googletagmanager.com/gtag/js')
+    expect(body).not.toContain('gtag(')
+    expect(body).not.toContain('sentry-cdn.com')
+    expect(body).not.toContain('id=""')
   })
 })
 
