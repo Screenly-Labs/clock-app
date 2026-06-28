@@ -1,84 +1,90 @@
-/* global country */
-(function () {
+import {
+  setLocale,
+  setTimeZone,
+  formatTimeParts,
+  formatDate,
+  getZonedHour,
+  getDayPeriod
+} from './locale.js'
+
+// This file is bundled by Bun.build and served as a PLAIN classic <script>.
+// It must therefore stay a self-executing IIFE with NO top-level `export`:
+// the testable helpers live in ./locale.js (bundled in here), and this file
+// exports nothing. That keeps the served bundle loadable by every cached HTML
+// variant — both a classic <script> tag and a type="module" tag run a
+// self-executing script identically — so a deploy never strands cached pages.
+;(() => {
   let clockTimer
-  let timeFormat = 'h12'
-  const locales = JSON.parse('{"AF":"ps-AF","AL":"sq-AL","DZ":"ar-DZ","AS":"en-AS","AD":"ca","AO":"pt","AI":"en","AQ":"en-US","AG":"en","AR":"es-AR","AM":"hy-AM","AW":"nl","AU":"en-AU","AT":"de-AT","AZ":"az-Cyrl-AZ","BS":"en","BH":"ar-BH","BD":"bn-BD","BB":"en","BY":"be-BY","BE":"nl-BE","BZ":"en-BZ","BJ":"fr-BJ","BM":"en","BT":"dz","BO":"es-BO","BQ":"nl","BA":"bs-BA","BW":"en-BW","BV":"no","BR":"pt-BR","IO":"en","BN":"ms-BN","BG":"bg-BG","BF":"fr-BF","BI":"fr-BI","CV":"kea-CV","KH":"km-KH","CM":"fr-CM","CA":"en-CA","KY":"en","CF":"fr-CF","TD":"fr-TD","CL":"es-CL","CN":"zh-CN","CX":"en","CC":"en","CO":"es-CO","KM":"fr-KM","CD":"fr-CD","CG":"fr-CG","CK":"en","CR":"es-CR","HR":"hr-HR","CU":"es","CW":"nl","CY":"el-CY","CZ":"cs-CZ","CI":"fr-CI","DK":"da-DK","DJ":"fr-DJ","DM":"en","DO":"es-DO","EC":"es-EC","EG":"ar-EG","SV":"es-SV","GQ":"fr-GQ","ER":"ti-ER","EE":"et-EE","SZ":"en","ET":"am-ET","FK":"en","FO":"fo-FO","FJ":"en","FI":"fi-FI","FR":"fr-FR","GF":"fr","PF":"fr","TF":"fr","GA":"fr-GA","GM":"en","GE":"ka-GE","DE":"de-DE","GH":"ak-GH","GI":"en","GR":"el-GR","GL":"kl-GL","GD":"en","GP":"fr-GP","GU":"en-GU","GT":"es-GT","GG":"en","GN":"fr-GN","GW":"pt-GW","GY":"en","HT":"fr","HM":"en","VA":"it","HN":"es-HN","HK":"en-HK","HU":"hu-HU","IS":"is-IS","IN":"hi-IN","ID":"id-ID","IR":"fa-IR","IQ":"ar-IQ","IE":"en-IE","IM":"en","IL":"he-IL","IT":"it-IT","JM":"en-JM","JP":"ja-JP","JE":"en","JO":"ar-JO","KZ":"kk-Cyrl-KZ","KE":"ebu-KE","KI":"en","KP":"ko","KR":"ko-KR","KW":"ar-KW","KG":"ky","LA":"lo","LV":"lv-LV","LB":"ar-LB","LS":"en","LR":"en","LY":"ar-LY","LI":"de-LI","LT":"lt-LT","LU":"fr-LU","MO":"zh-Hans-MO","MG":"fr-MG","MW":"en","MY":"ms-MY","MV":"dv","ML":"fr-ML","MT":"en-MT","MH":"en-MH","MQ":"fr-MQ","MR":"ar","MU":"en-MU","YT":"fr","MX":"es-MX","FM":"en","MD":"ro-MD","MC":"fr-MC","MN":"mn","ME":"sr-Cyrl-ME","MS":"en","MA":"ar-MA","MZ":"pt-MZ","MM":"my-MM","NA":"en-NA","NR":"en","NP":"ne-NP","NL":"nl-NL","AN":"nl-AN","NC":"fr","NZ":"en-NZ","NI":"es-NI","NE":"fr-NE","NG":"ha-Latn-NG","NU":"en","NF":"en","MK":"mk-MK","MP":"en-MP","NO":"nb-NO","OM":"ar-OM","PK":"en-PK","PW":"en","PS":"ar","PA":"es-PA","PG":"en","PY":"es-PY","PE":"es-PE","PH":"en-PH","PN":"en","PL":"pl-PL","PT":"pt-PT","PR":"es-PR","QA":"ar-QA","RO":"ro-RO","RU":"ru-RU","RW":"fr-RW","RE":"fr-RE","BL":"fr-BL","SH":"en","KN":"en","LC":"en","MF":"fr-MF","PM":"fr","VC":"en","WS":"sm","SM":"it","ST":"pt","SA":"ar-SA","SN":"fr-SN","RS":"sr-Cyrl-RS","SC":"fr","SL":"en","SG":"en-SG","SX":"nl","SK":"sk-SK","SI":"sl-SI","SB":"en","SO":"so-SO","ZA":"af-ZA","GS":"en","SS":"en","ES":"es-ES","LK":"si-LK","SD":"ar-SD","SR":"nl","SJ":"no","SE":"sv-SE","CH":"fr-CH","SY":"ar-SY","TW":"zh-Hant-TW","TJ":"tg","TZ":"asa-TZ","TH":"th-TH","TL":"pt","TG":"fr-TG","TK":"en","TO":"to-TO","TT":"en-TT","TN":"ar-TN","TR":"tr-TR","TM":"tk","TC":"en","TV":"en","UG":"cgg-UG","UA":"uk-UA","AE":"ar-AE","GB":"en-GB","UM":"en-UM","US":"en-US","UY":"es-UY","UZ":"uz-Cyrl-UZ","VU":"bi","VE":"es-VE","VN":"vi-VN","VG":"en","VI":"en-VI","WF":"fr","EH":"es","YE":"ar-YE","ZM":"bem-ZM","ZW":"en-ZW","AX":"sv","XK":"sq"}')
-
-  const getDefaultTimePreference = () => {
-    const url = new URL(window.location)
-    const preference = url.searchParams.get('24h')
-
-    if (typeof preference === 'string') {
-      return preference === '0' ? 'h12' : 'h24'
-    }
-  }
-
-  const setTimeFormat = (code) => {
-    const preference = getDefaultTimePreference()
-    if (preference) {
-      timeFormat = preference
-    } else {
-      const locale = locales[code]
-      timeFormat = Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hourCycle || 'h12'
-    }
-  }
+  let ctaTimer
 
   const generateAnalyticsEvent = (name, payload) => {
-    typeof gtag !== 'undefined' && gtag('event', name, payload) // eslint-disable-line no-undef
+    typeof gtag !== 'undefined' && gtag('event', name, payload)
   }
 
-  const loadBackground = (img = 'default') => {
-    const imagesPath = '/static/images'
-    const imgSrc = `${imagesPath}/${img}.jpg`
-    const image = new Image()
+  const getCountry = () => document.querySelector('#clock-data')?.dataset.country || ''
+  const getTimeZone = () => document.querySelector('#clock-data')?.dataset.timezone || ''
 
-    image.addEventListener('load', () => {
-      document.body.style.backgroundImage = `url(${imgSrc})`
-    })
-
-    image.src = imgSrc
+  // Sync the pure-CSS minute progress bar to real wall-clock seconds. The bar
+  // animates scaleX 0→1 over 60s on a loop; a negative delay offsets it to the
+  // current position so no per-frame JS is needed afterwards.
+  const syncMinuteFill = () => {
+    const fill = document.querySelector('#minute-fill')
+    if (!fill) return
+    const now = new Date()
+    fill.style.animationDelay = `-${now.getSeconds() + now.getMilliseconds() / 1000}s`
   }
 
-  const convert24to12format = (hrs) => hrs % 12 || 12
-
-  const padTime = (time) => String(time).padStart(2, '0')
-
-  const formatTimeByLocale = (hrs, mins) => {
-    const is12HrFormat = timeFormat === 'h11' || timeFormat === 'h12'
-    const AmOrPm = hrs < 12 ? 'AM' : 'PM'
-    let fmtHrs = hrs
-
-    if (is12HrFormat) {
-      fmtHrs = convert24to12format(hrs)
-    }
-
-    const timeString = `${padTime(fmtHrs)}:${padTime(mins)}`
-    return is12HrFormat ? `${timeString}<span>${AmOrPm}</span>` : timeString
-  }
-
-  const formatTime = (dateObj) => formatTimeByLocale(dateObj.getHours(), dateObj.getMinutes())
-
-  const getMonthString = (month) => {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    return months[month]
-  }
-
-  const formatDate = (dateObj) => {
-    const date = String(dateObj.getDate()).padStart(2, '0')
-    const month = getMonthString(dateObj.getMonth())
-    const year = dateObj.getFullYear()
-
-    return `${date} ${month}, ${year}`
-  }
-
-  const initDateTime = () => {
+  const renderClock = () => {
     clearTimeout(clockTimer)
     const now = new Date()
 
-    document.querySelector('#date').innerText = formatDate(now)
-    document.querySelector('#time').innerHTML = formatTime(now)
+    const { time, period } = formatTimeParts(now)
+    document.querySelector('#time').textContent = time
+    document.querySelector('#ampm').textContent = period
+    document.querySelector('#date').textContent = formatDate(now)
+    document.body.dataset.period = getDayPeriod(getZonedHour(now))
 
-    clockTimer = setTimeout(initDateTime, 20000)
+    // Re-render exactly on the next minute boundary (the displayed value only
+    // changes by the minute); the +50ms guards against firing a hair early.
+    const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds()
+    clockTimer = setTimeout(renderClock, msToNextMinute + 50)
+  }
+
+  /**
+   * Rotating Screenly call-to-action.
+   *
+   * The banner is only shown on non-Screenly devices (a browser tab or a rival
+   * signage system), so the copy pitches the viewer to switch to Screenly. It
+   * is non-interactive (a digital sign has no cursor/touch) and surfaces
+   * screenly.io as the destination a viewer types in themselves.
+   */
+  const ctaMessages = [
+    'Powerful, secure, simple digital signage',
+    'Secure by default: SOC 2, zero-trust',
+    'Manage every screen from anywhere',
+    'Run Screenly on hardware you already own',
+    'Powering 10,000+ screens worldwide'
+  ]
+  let ctaIndex = 0
+
+  const rotateCta = () => {
+    const msg = document.querySelector('#cta-msg')
+    if (!msg) return
+
+    ctaIndex = (ctaIndex + 1) % ctaMessages.length
+    const next = ctaMessages[ctaIndex]
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
+
+    if (reduceMotion) {
+      msg.textContent = next
+      return
+    }
+
+    msg.classList.add('is-out')
+    setTimeout(() => {
+      msg.textContent = next
+      msg.classList.remove('is-out')
+    }, 450)
   }
 
   const setBanner = () => {
@@ -86,8 +92,10 @@
     const { userAgent } = navigator
     const isScreenlyDevice = userAgent.includes('screenly-viewer')
 
-    if (!isScreenlyDevice) {
+    if (banner && !isScreenlyDevice) {
       banner.classList.add('visible')
+      clearInterval(ctaTimer)
+      ctaTimer = setInterval(rotateCta, 5000)
     }
 
     generateAnalyticsEvent('device', {
@@ -97,11 +105,22 @@
   }
 
   const init = () => {
-    loadBackground('clear')
-    setTimeFormat(country)
-    initDateTime()
+    // Location comes from the Cloudflare edge (country + IANA timezone), so the
+    // sign shows the local wall clock even if the device's own clock is wrong.
+    setLocale(getCountry())
+    setTimeZone(getTimeZone())
+    syncMinuteFill()
+    renderClock()
     setBanner()
   }
 
-  init()
+  // Only auto-run in a real browser; under a test runner there is no document.
+  // The script is loaded async, so wait for the DOM before reading elements.
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init)
+    } else {
+      init()
+    }
+  }
 })()

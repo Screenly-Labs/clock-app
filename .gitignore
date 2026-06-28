@@ -1,6 +1,8 @@
 dist
 node_modules
 worker
+.dev.vars
+.wrangler
 package-lock.json
 .cargo-ok
 

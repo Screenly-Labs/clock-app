@@ -6,30 +6,45 @@
 
 This is an example asset for Screenly as part of the [Screenly Playground](https://github.com/Screenly/playground).
 
-You can view the live demo at [clock.srly.io](https://clock.srly.io/). The clock should automatically detect your local time zone and display the correct time.
+You can view the live demo at [clock.srly.io](https://clock.srly.io/). The clock detects the viewer's location at the Cloudflare edge (country + timezone) and displays the correct local time, in the local 12/24-hour format and language.
 
 ## Requirements
 
-Install [Wrangler](https://developers.cloudflare.com/workers/wrangler/)
+This project uses [Bun](https://bun.sh/) as its package manager. Install dependencies with:
 
 ```bash
-$ npm install -g wrangler
+bun install
 ```
+
+This installs [Wrangler](https://developers.cloudflare.com/workers/wrangler/) locally. Run it via `bunx wrangler` (or install it globally with `bun add -g wrangler`).
 
 Login to Cloudflare
 
 ```bash
-$ wrangler login
+bunx wrangler login
 ```
 
 Run the project in dev mode
 
 ```bash
-$ wrangler dev
+bun run dev
 ```
 
-Publish worker
+Lint and test
 
 ```bash
-$ wrangler publish --env [environment name]
+bun run lint
+bun test
+```
+
+Build the static assets (vendors webfonts, then minifies JS/CSS in place)
+
+```bash
+bun run build
+```
+
+Deploy worker
+
+```bash
+bunx wrangler deploy --env [environment name]
 ```
