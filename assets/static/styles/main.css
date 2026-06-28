@@ -304,6 +304,14 @@ body[data-period="night"] {
   margin-inline-start: 0;
 }
 
+/* ko / zh-Hant and friends print the day period before the time. Reorder the
+   marker ahead of the digits and flip its margin to the trailing side. */
+.clock.period-first .ampm {
+  order: -1;
+  margin-inline-start: 0;
+  margin-inline-end: 0.5em;
+}
+
 /* ---- Minute progress hairline: pure-CSS, JS only syncs the phase --------- */
 .minute-track {
   inline-size: min(34ch, 56vmin);

@@ -57,6 +57,29 @@ describe('time formatting (12h / 24h, localized, zoned)', () => {
     expect(parts.period).toBe('')
   })
 
+  it('keeps the day period before the time for ko / zh-Hant (periodFirst)', () => {
+    setLocale('KR')
+    setTimeZone('Asia/Seoul')
+    // 13:30 UTC -> 22:30 Seoul, i.e. 10:30 PM. Korean prints "오후 10:30".
+    let parts = formatTimeParts(INSTANT)
+    expect(parts.time).toBe('10:30')
+    expect(parts.period).not.toBe('')
+    expect(parts.periodFirst).toBe(true)
+
+    // en-US prints the period last.
+    setLocale('US')
+    setTimeZone('America/New_York')
+    parts = formatTimeParts(INSTANT)
+    expect(parts.periodFirst).toBe(false)
+  })
+
+  it('preserves the locale-native hour:minute separator', () => {
+    // Finnish uses "." rather than ":" between hour and minute.
+    setLocale('FI')
+    setTimeZone('Europe/Helsinki')
+    expect(formatTimeParts(INSTANT).time).toBe('16.30')
+  })
+
   it('renders the location wall clock from its IANA timezone', () => {
     setLocale('JP')
     setTimeZone('Asia/Tokyo')

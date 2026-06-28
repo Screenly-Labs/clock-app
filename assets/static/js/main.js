@@ -38,9 +38,12 @@ import {
     clearTimeout(clockTimer)
     const now = new Date()
 
-    const { time, period } = formatTimeParts(now)
+    const { time, period, periodFirst } = formatTimeParts(now)
     document.querySelector('#time').textContent = time
     document.querySelector('#ampm').textContent = period
+    // ko / zh-Hant etc. print the day period before the time; flag the clock so
+    // CSS can reorder the marker instead of always trailing it.
+    document.querySelector('.clock')?.classList.toggle('period-first', periodFirst && period !== '')
     document.querySelector('#date').textContent = formatDate(now)
     document.body.dataset.period = getDayPeriod(getZonedHour(now))
 
