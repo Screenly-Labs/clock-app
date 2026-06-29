@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A full-screen localized clock for digital signage, deployed as a Cloudflare Worker. The page is server-rendered by [Hono](https://hono.dev/) JSX at the edge; the worker reads the viewer's location from Cloudflare's `cf` object (country + IANA timezone) and injects it into the HTML, then client-side JS uses `Intl` to render the local wall-clock time, date, and 12/24h format in the location's language.
 
-Note: the README marks this project as **abandoned** in favor of the Clock Edge App, but the codebase is current and tested.
+Note: active development has moved to the Clock Edge App, but this codebase is current and tested.
 
 ## Commands
 
