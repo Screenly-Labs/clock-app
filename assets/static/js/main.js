@@ -1,6 +1,7 @@
 import {
   setLocale,
   setTimeZone,
+  setHourFormat,
   formatTimeParts,
   formatDate,
   getZonedHour,
@@ -112,6 +113,9 @@ import {
     // sign shows the local wall clock even if the device's own clock is wrong.
     setLocale(getCountry())
     setTimeZone(getTimeZone())
+    // Optional ?24h launch setting (from the signage-app manifest) overrides the
+    // locale's default 12/24h clock face; absent => locale decides.
+    setHourFormat(new URLSearchParams(window.location.search).get('24h'))
     syncMinuteFill()
     renderClock()
     setBanner()

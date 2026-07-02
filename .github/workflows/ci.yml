@@ -17,5 +17,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Lint (Biome)
         run: bun run lint
+      - name: Validate signage-app manifest is valid JSON
+        run: jq empty signage-app.json
       - name: Test
         run: bun test

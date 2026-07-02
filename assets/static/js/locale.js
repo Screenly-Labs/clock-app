@@ -33,6 +33,12 @@ let dateFormatterLong
 let dateFormatterShort
 let hourFormatter
 
+// Optional 12/24h override from the ?24h launch setting (see the signage-app
+// manifest's `24h` enum): undefined = follow the locale's own default, true =
+// force 12-hour, false = force 24-hour. Kept separate from `locale` so the
+// setting overrides only the clock face, not the language of names/date.
+let hour12Override
+
 // Only pass timeZone to Intl when it is a non-empty, valid IANA name; an
 // invalid zone makes the DateTimeFormat constructor throw.
 const zoneOpt = () => (timeZone ? { timeZone } : {})
@@ -44,7 +50,10 @@ const buildFormatters = () => {
   // makes every formatter render the location's wall clock from an absolute
   // instant, independent of the device's own timezone.
   const z = zoneOpt()
-  const timeOpts = { hour: 'numeric', minute: '2-digit', ...z }
+  // hour12 is only set when the ?24h setting forces it; otherwise it is omitted
+  // so Intl keeps the locale's native 12/24h convention (and its AM/PM part).
+  const h12 = hour12Override !== undefined ? { hour12: hour12Override } : {}
+  const timeOpts = { hour: 'numeric', minute: '2-digit', ...h12, ...z }
   const dateLongOpts = { weekday: 'long', month: 'long', day: 'numeric', calendar: 'gregory', ...z }
   const dateShortOpts = {
     weekday: 'short',
@@ -66,7 +75,7 @@ const buildFormatters = () => {
     // safe locale rather than break the clock.
     locale = FALLBACK_LOCALE
     timeZone = undefined
-    timeFormatter = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit' })
+    timeFormatter = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit', ...h12 })
     dateFormatterLong = new Intl.DateTimeFormat(locale, {
       weekday: 'long',
       month: 'long',
@@ -95,6 +104,14 @@ export const resolveLocale = (code) => locales[code] || FALLBACK_LOCALE
 // a falsy value clears it, so the clock uses the device's own zone.
 export const setTimeZone = (tz) => {
   timeZone = tz || undefined
+  buildFormatters()
+}
+
+// Apply the ?24h launch setting: '0' => 12-hour, '1' => 24-hour; any other
+// value (including '' or null, the manifest's "Default") clears the override so
+// the locale's own convention decides. Values mirror the manifest's `24h` enum.
+export const setHourFormat = (value) => {
+  hour12Override = value === '0' ? true : value === '1' ? false : undefined
   buildFormatters()
 }
 

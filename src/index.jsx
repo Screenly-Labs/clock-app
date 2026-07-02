@@ -3,6 +3,7 @@ import { logger } from 'hono/logger'
 import { serveStatic } from 'hono/cloudflare-workers'
 import manifest from '__STATIC_CONTENT_MANIFEST'
 import App from './components/App'
+import signageManifest from '../signage-app.json'
 
 const app = new Hono()
 
@@ -37,6 +38,17 @@ app.use('/static/*', async (c, next) => {
   )
 })
 app.use('/static/*', serveStatic({ root: './', manifest }))
+
+// Signage-app manifest: the app-store index and signage players fetch this
+// cross-origin to render the settings form and build the launch URL, so it must
+// be anonymous, JSON, and CORS-open. Served from the worker (not /static) so the
+// dotfile `.well-known/` path and headers are guaranteed regardless of host.
+app.get('/.well-known/signage-app.json', (c) => {
+  c.header('Content-Type', 'application/json')
+  c.header('Access-Control-Allow-Origin', '*')
+  c.header('Cache-Control', 'public, max-age=3600')
+  return c.body(JSON.stringify(signageManifest))
+})
 
 app.get('/', async (c) => {
   const env = c.env.ENV
