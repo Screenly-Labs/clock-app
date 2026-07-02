@@ -8,7 +8,7 @@
   "tags": ["Clock"],
   "source": "https://github.com/Screenly-Labs/clock-app",
   "support": "https://github.com/Screenly-Labs/clock-app/issues",
-  "playback": { "duration": 30, "refreshIntervalS": 3600 },
+  "playback": { "pacing": "fixed", "refreshIntervalS": 3600 },
   "settings": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object",
