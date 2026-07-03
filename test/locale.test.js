@@ -8,6 +8,7 @@ import {
   resolveLocale,
   setLocale,
   setTimeZone,
+  setHourFormat,
   formatTime,
   formatTimeParts,
   formatDate,
@@ -91,6 +92,44 @@ describe('time formatting (12h / 24h, localized, zoned)', () => {
     setTimeZone('')
     // No throw, and a well-formed 24h string for en-GB.
     expect(formatTime(INSTANT)).toMatch(/^\d{1,2}:\d{2}$/)
+  })
+})
+
+describe('setHourFormat (?24h launch setting override)', () => {
+  // Force a locale whose native convention is the opposite of each override, so a
+  // passing assertion proves the override — not the locale default — is in effect.
+  it("forces 24-hour with '1' even for a 12h locale (en-US)", () => {
+    setLocale('US')
+    setTimeZone('America/New_York')
+    setHourFormat('1')
+    const { time, period } = formatTimeParts(INSTANT)
+    // 13:30 UTC -> 09:30 New York (EDT), shown 24-hour with no AM/PM part.
+    expect(time).toBe('09:30')
+    expect(period).toBe('')
+    setHourFormat('')
+  })
+
+  it("forces 12-hour with '0' even for a 24h locale (en-GB)", () => {
+    setLocale('GB')
+    setTimeZone('Europe/London')
+    setHourFormat('0')
+    const { time, period } = formatTimeParts(INSTANT)
+    expect(time).toBe('2:30')
+    expect(period).toMatch(/PM/i)
+    setHourFormat('')
+  })
+
+  it("follows the locale default for '' / null / unknown values", () => {
+    setLocale('US')
+    setTimeZone('America/New_York')
+    setHourFormat('1')
+    // Clearing the override restores en-US's native 12-hour clock.
+    setHourFormat('')
+    expect(formatTimeParts(INSTANT).period).toMatch(/AM/i)
+    setHourFormat(null)
+    expect(formatTimeParts(INSTANT).period).toMatch(/AM/i)
+    setHourFormat('bogus')
+    expect(formatTimeParts(INSTANT).period).toMatch(/AM/i)
   })
 })
 

@@ -1,0 +1,29 @@
+{
+  "manifestVersion": "1",
+  "id": "clock",
+  "name": "Digital Clock",
+  "description": "A clean digital clock that shows the local time on any screen.",
+  "summary": "Always-on local time for any display.",
+  "vendor": "Screenly",
+  "tags": ["Clock"],
+  "source": "https://github.com/Screenly-Labs/clock-app",
+  "support": "https://github.com/Screenly-Labs/clock-app/issues",
+  "playback": { "pacing": "fixed", "refreshIntervalS": 3600 },
+  "settings": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "24h": {
+        "type": "string",
+        "title": "Clock format",
+        "default": "",
+        "enum": ["", "0", "1"],
+        "x-enumLabels": ["Default", "12-hour", "24-hour"]
+      }
+    }
+  },
+  "launch": {
+    "baseUrl": "https://clock.srly.io/",
+    "template": "{?24h}"
+  }
+}

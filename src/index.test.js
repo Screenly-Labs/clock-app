@@ -138,6 +138,26 @@ describe('Analytics integration (gtag.js / Sentry)', () => {
   })
 })
 
+describe('Signage-app manifest (/.well-known/signage-app.json)', () => {
+  it('serves the manifest as JSON with open CORS for the store and players', async () => {
+    const res = await app.request('http://localhost/.well-known/signage-app.json')
+
+    expect(res.status).toBe(200)
+    // Cross-origin consumers (store index + players) require open CORS and JSON.
+    expect(res.headers.get('Content-Type')).toContain('application/json')
+    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*')
+
+    const body = await res.json()
+    expect(body.manifestVersion).toBe('1')
+    expect(body.id).toBe('clock')
+    // The setting name + enum values must match the query param the app accepts.
+    expect(body.settings.properties['24h'].enum).toEqual(['', '0', '1'])
+    // baseUrl must be https with a trailing slash; template drops empty 24h.
+    expect(body.launch.baseUrl).toBe('https://clock.srly.io/')
+    expect(body.launch.template).toBe('{?24h}')
+  })
+})
+
 describe('Static asset caching (/static/*)', () => {
   it('caches versioned assets immutably and unversioned ones briefly', async () => {
     // Versioned URL (?v=...) is content-addressed via the query, so it is safe

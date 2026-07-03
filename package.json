@@ -14,7 +14,7 @@
     "build": "bun run build.js",
     "deploy": "wrangler deploy --env=dev"
   },
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.2.9",
     "@fontsource-variable/hanken-grotesk": "^5.2.8",

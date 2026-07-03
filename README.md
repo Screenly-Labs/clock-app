@@ -1,7 +1,5 @@
 # Screenly Clock App
 
-**Warning:** This project has been abandoned in favor of the [Clock Edge App](https://github.com/Screenly/Playground/tree/master/edge-apps/clock).
-
 ![Clock App Screenshot](assets/screenshot.jpg)
 
 This is an example asset for Screenly as part of the [Screenly Playground](https://github.com/Screenly/playground).
