@@ -8,9 +8,18 @@
 // ./assets by wrangler's [site] config and referenced at /static/..., so the
 // minified output overwrites the source (CI builds from a fresh checkout).
 
+import { readFileSync } from 'node:fs'
 import { Glob } from 'bun'
 import { bundleJs, processCss } from '@screenly-labs/signage-kit/build'
 import { run as syncFonts } from './sync-fonts.js'
+
+// Shared chrome CSS from @screenly-labs/signage-kit — the canonical @font-face set
+// and the standardized fixed footer badge. Prepended to this app's raw main.css at
+// build time (a raw-CSS Worker can't resolve a bare `@import`), so the shared rules
+// land before the app's, which override where they overlap.
+const sharedCss = ['fonts.css', 'brand.css']
+  .map((f) => readFileSync(Bun.resolveSync(`@screenly-labs/signage-kit/styles/${f}`, import.meta.dir), 'utf8'))
+  .join('\n')
 
 // Vendor the Bun-managed webfonts into ./assets before minifying.
 await syncFonts()
@@ -37,7 +46,7 @@ console.log('✓ JS: assets/static/js/main.js (bundleJs, iife, es2017)')
 let count = 1
 for await (const path of new Glob('assets/static/styles/*.css').scan('.')) {
   try {
-    const code = await processCss(await Bun.file(path).text(), {
+    const code = await processCss(`${sharedCss}\n${await Bun.file(path).text()}`, {
       includeDegraded: true,
       filename: path
     })

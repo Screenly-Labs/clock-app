@@ -1,6 +1,7 @@
 // Side-effect import: installs the replaceChildren shim for the older-browser
 // degraded mode. Must stay first so the shim is in place before any render.
 import '@screenly-labs/signage-kit/polyfills'
+import { removeScreenlyBranding } from '@screenly-labs/signage-kit/branding'
 import {
   setLocale,
   setTimeZone,
@@ -19,11 +20,6 @@ import {
 // self-executing script identically — so a deploy never strands cached pages.
 ;(() => {
   let clockTimer
-  let ctaTimer
-
-  const generateAnalyticsEvent = (name, payload) => {
-    typeof gtag !== 'undefined' && gtag('event', name, payload)
-  }
 
   const getCountry = () => document.querySelector('#clock-data')?.dataset.country || ''
   const getTimeZone = () => document.querySelector('#clock-data')?.dataset.timezone || ''
@@ -57,60 +53,6 @@ import {
     clockTimer = setTimeout(renderClock, msToNextMinute + 50)
   }
 
-  /**
-   * Rotating Screenly call-to-action.
-   *
-   * The banner is only shown on non-Screenly devices (a browser tab or a rival
-   * signage system), so the copy pitches the viewer to switch to Screenly. It
-   * is non-interactive (a digital sign has no cursor/touch) and surfaces
-   * screenly.io as the destination a viewer types in themselves.
-   */
-  const ctaMessages = [
-    'Powerful, secure, simple digital signage',
-    'Secure by default: SOC 2, zero-trust',
-    'Manage every screen from anywhere',
-    'Run Screenly on hardware you already own',
-    'Powering 10,000+ screens worldwide'
-  ]
-  let ctaIndex = 0
-
-  const rotateCta = () => {
-    const msg = document.querySelector('#cta-msg')
-    if (!msg) return
-
-    ctaIndex = (ctaIndex + 1) % ctaMessages.length
-    const next = ctaMessages[ctaIndex]
-    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
-
-    if (reduceMotion) {
-      msg.textContent = next
-      return
-    }
-
-    msg.classList.add('is-out')
-    setTimeout(() => {
-      msg.textContent = next
-      msg.classList.remove('is-out')
-    }, 450)
-  }
-
-  const setBanner = () => {
-    const banner = document.querySelector('.upgrade-banner')
-    const { userAgent } = navigator
-    const isScreenlyDevice = userAgent.includes('screenly-viewer')
-
-    if (banner && !isScreenlyDevice) {
-      banner.classList.add('visible')
-      clearInterval(ctaTimer)
-      ctaTimer = setInterval(rotateCta, 5000)
-    }
-
-    generateAnalyticsEvent('device', {
-      app_name: 'Screenly Clock App',
-      screenly_device: isScreenlyDevice
-    })
-  }
-
   const init = () => {
     // Location comes from the Cloudflare edge (country + IANA timezone), so the
     // sign shows the local wall clock even if the device's own clock is wrong.
@@ -121,7 +63,7 @@ import {
     setHourFormat(new URLSearchParams(window.location.search).get('24h'))
     syncMinuteFill()
     renderClock()
-    setBanner()
+    removeScreenlyBranding()
   }
 
   // Only auto-run in a real browser; under a test runner there is no document.
