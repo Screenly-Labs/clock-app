@@ -16,9 +16,7 @@
   },
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@fontsource-variable/fraunces": "^5.2.9",
-    "@fontsource-variable/hanken-grotesk": "^5.2.8",
-    "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.1",
+    "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.2",
     "hono": "^4.12.27"
   },
   "devDependencies": {

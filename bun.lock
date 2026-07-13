@@ -5,9 +5,7 @@
     "": {
       "name": "clock-app",
       "dependencies": {
-        "@fontsource-variable/fraunces": "^5.2.9",
-        "@fontsource-variable/hanken-grotesk": "^5.2.8",
-        "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.1",
+        "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.2",
         "hono": "^4.12.27",
       },
       "devDependencies": {
@@ -111,9 +109,17 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.28.1", "", { "os": "win32", "cpu": "x64" }, "sha512-bm4Mowrv+GXMlpWX++EcXw/iLyd1o3+bJkC2DkWXYVvgZCqD/bSj9ctZeAMC3cIxgjRVR2Dufaiu4YPxr5gW1A=="],
 
+    "@fontsource-variable/bricolage-grotesque": ["@fontsource-variable/bricolage-grotesque@5.2.10", "", {}, "sha512-5EDsCqgGpKVcJWE4sg9ydli+t5WM97mISYw5lla/Ev4z71FwXh1oN0YUU8xjkRW9+wBCGD9R+ntAvI8G4bUFJg=="],
+
     "@fontsource-variable/fraunces": ["@fontsource-variable/fraunces@5.2.9", "", {}, "sha512-Y6IjunlN9Ni723np+GIgAaKzCDBrPRrqNi01TZxHs5wtHYROWFM9W6yiT+/gGwSjWIRD18oX17kD/BRWekc/Lw=="],
 
     "@fontsource-variable/hanken-grotesk": ["@fontsource-variable/hanken-grotesk@5.2.8", "", {}, "sha512-K7hu09ZKReBc7EifRLeM4K94NZBrxFEg0nGcISmVwlFQOJo4EmYkLXTWEwr5JcNW4z2hr5zy8vLS2sxC8JDmrQ=="],
+
+    "@fontsource-variable/jetbrains-mono": ["@fontsource-variable/jetbrains-mono@5.2.8", "", {}, "sha512-WBA9elru6Jdp5df2mES55wuOO0WIrn3kpXnI4+W2ek5u3ZgLS9XS4gmIlcQhiZOWEKl95meYdvK7xI+ETLCq/Q=="],
+
+    "@fontsource-variable/newsreader": ["@fontsource-variable/newsreader@5.2.10", "", {}, "sha512-MdI2iRwrqWpMOU/2aV2BgfZ4dJNlj/XlYaY8Zb7t87mWqHskYW0XiUANkt1cyOCiEfW2VQ0bQ5vZgGPp6B2B4w=="],
+
+    "@fontsource/space-mono": ["@fontsource/space-mono@5.2.9", "", {}, "sha512-b61faFOHEISQ/pD25G+cfGY9o/WW6lRv6hBQQfpWvEJ4y1V+S4gmth95EVyBE2VL3qDYHeVQ8nBzrplzdXTDDg=="],
 
     "@img/colour": ["@img/colour@1.1.0", "", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 
@@ -177,7 +183,7 @@
 
     "@poppinss/exception": ["@poppinss/exception@1.2.3", "", {}, "sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw=="],
 
-    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#f15fa0d", { "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-f15fa0d", "sha512-s6kDUCRCXahi9ZE1y2MMOXFCN9QT5RoASBKT14YJYHTjwWu1tvGOpCv0+wunnFkAdU4dNXV1NLZQuEHUR88J4g=="],
+    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#b7f3d44", { "dependencies": { "@fontsource-variable/bricolage-grotesque": "^5.2.10", "@fontsource-variable/fraunces": "^5.2.9", "@fontsource-variable/hanken-grotesk": "^5.2.8", "@fontsource-variable/jetbrains-mono": "^5.2.8", "@fontsource-variable/newsreader": "^5.2.10", "@fontsource/space-mono": "^5.2.9" }, "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-b7f3d44", "sha512-42YdnSCPpYpTyMucl1T+FGv3HQeyzz2UDEvYoLdP4EMVAD1m0U1G8WN2hgTE4vFVs3w8hGcqFisWBjkEc26rFA=="],
 
     "@sindresorhus/is": ["@sindresorhus/is@7.2.0", "", {}, "sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw=="],
 
