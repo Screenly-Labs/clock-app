@@ -15,6 +15,12 @@
     "deploy": "wrangler deploy --env=dev"
   },
   "license": "AGPL-3.0-only",
+  "browserslist": [
+    "chrome >= 79",
+    "firefox >= 75",
+    "safari >= 11.1",
+    "edge >= 79"
+  ],
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.2.9",
     "@fontsource-variable/hanken-grotesk": "^5.2.8",
@@ -23,6 +29,9 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",
     "@cloudflare/workers-types": "^4.20260623.1",
+    "browserslist": "^4.28.6",
+    "esbuild": "^0.28.1",
+    "lightningcss": "^1.32.0",
     "wrangler": "^4.104.0"
   }
 }

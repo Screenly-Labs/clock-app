@@ -5,53 +5,63 @@
 // referenced at /static/..., so the minified output must overwrite the source.
 
 import { Glob } from 'bun'
+import browserslist from 'browserslist'
+import { build as esbuild } from 'esbuild'
+import { browserslistToTargets, transform as lightningcss } from 'lightningcss'
 import { run as syncFonts } from './sync-fonts.js'
+
+// The `browserslist` field in package.json is the CSS support floor: Lightning
+// CSS down-levels the stylesheet to it. The JS is lowered separately by esbuild to
+// a fixed ES2017 syntax floor (kept at/below the browserslist minimum); esbuild
+// can't read browserslist, so keep the two in sync if you change the floor. See
+// the degraded-mode notes in Layout.jsx / main.css.
+const cssTargets = browserslistToTargets(browserslist())
 
 // Vendor the Bun-managed webfonts into ./assets before minifying.
 await syncFonts()
 
-// main.js is the only JS *entry*. It imports ./locale.js (the unit-tested pure
-// helpers), and `external: []` tells Bun to inline that import. main.js itself
-// exports nothing, so the bundle is a self-executing classic script with no
-// `export` token — loadable by every cached HTML variant (plain <script> or
-// type="module") so a deploy never strands cached pages. locale.js is a
-// dependency, not an entry, so it is never built/served on its own.
-const cssEntries = []
+// main.js is the only JS *entry*. It imports ./locale.js (and the polyfills shim);
+// esbuild inlines those and lowers modern syntax (?., ??, spread) to the ES2017
+// floor so old engines can parse it. format:'iife' keeps the output a self-
+// executing classic script with no `export`/`import` token — loadable by every
+// cached HTML variant so a deploy never strands cached pages. allowOverwrite lets
+// esbuild write back over the entry (assets are served in place by wrangler).
+try {
+  await esbuild({
+    entryPoints: ['assets/static/js/main.js'],
+    bundle: true,
+    minify: true,
+    format: 'iife',
+    target: ['es2017'],
+    outfile: 'assets/static/js/main.js',
+    allowOverwrite: true
+  })
+} catch (error) {
+  console.error('✗ Failed to build assets/static/js/main.js')
+  console.error(error)
+  process.exit(1)
+}
+console.log('✓ JS: assets/static/js/main.js (esbuild, iife, es2017)')
+
+// CSS: Lightning CSS down-levels each stylesheet to the browserslist floor and
+// minifies in place. url(/static/...) refs are left untouched.
+let count = 1
 for await (const path of new Glob('assets/static/styles/*.css').scan('.')) {
-  cssEntries.push(path)
-}
-
-const targets = [
-  // Bundle local imports (external: []).
-  { label: 'JS', entries: ['assets/static/js/main.js'], external: [] },
-  // Leave url(/static/...) refs untouched rather than resolving them as
-  // build-time assets (external: ['*']).
-  { label: 'CSS', entries: cssEntries, external: ['*'] }
-]
-
-let count = 0
-
-for (const { label, entries, external } of targets) {
-  for (const path of entries) {
-    const result = await Bun.build({
-      entrypoints: [path],
+  try {
+    const { code } = lightningcss({
+      filename: path,
+      code: await Bun.file(path).bytes(),
       minify: true,
-      target: 'browser',
-      external
+      targets: cssTargets
     })
-
-    if (!result.success) {
-      console.error(`✗ Failed to build ${path}`)
-      for (const message of result.logs) console.error(message)
-      process.exit(1)
-    }
-
-    // Build fully into memory before writing, so overwriting the source is safe.
-    const minified = await result.outputs[0].text()
-    await Bun.write(path, minified)
-    console.log(`✓ ${label}: ${path}`)
-    count++
+    await Bun.write(path, code)
+  } catch (error) {
+    console.error(`✗ Failed to build ${path}`)
+    console.error(error)
+    process.exit(1)
   }
+  console.log(`✓ CSS: ${path}`)
+  count++
 }
 
-console.log(`Build complete — ${count} file(s) minified in place.`)
+console.log(`Build complete — ${count} file(s) built in place.`)

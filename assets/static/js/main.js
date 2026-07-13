@@ -1,3 +1,6 @@
+// Side-effect import: installs the replaceChildren shim for the older-browser
+// degraded mode. Must stay first so the shim is in place before any render.
+import './polyfills.js'
 import {
   setLocale,
   setTimeZone,
@@ -8,7 +11,7 @@ import {
   getDayPeriod
 } from './locale.js'
 
-// This file is bundled by Bun.build and served as a PLAIN classic <script>.
+// This file is bundled by esbuild and served as a PLAIN classic <script>.
 // It must therefore stay a self-executing IIFE with NO top-level `export`:
 // the testable helpers live in ./locale.js (bundled in here), and this file
 // exports nothing. That keeps the served bundle loadable by every cached HTML
