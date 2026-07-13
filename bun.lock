@@ -7,7 +7,7 @@
       "dependencies": {
         "@fontsource-variable/fraunces": "^5.2.9",
         "@fontsource-variable/hanken-grotesk": "^5.2.8",
-        "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.0",
+        "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.1",
         "hono": "^4.12.27",
       },
       "devDependencies": {
@@ -177,7 +177,7 @@
 
     "@poppinss/exception": ["@poppinss/exception@1.2.3", "", {}, "sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw=="],
 
-    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#eb470fb", { "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-eb470fb", "sha512-acuAb2R/77crUjgnT9GFVlNdpgUTzvK5OLRRsZsZ30dZcJ7ThH/f8al2janEIJWC1JoyqTiarJ2x1uAH6In86A=="],
+    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#f15fa0d", { "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-f15fa0d", "sha512-s6kDUCRCXahi9ZE1y2MMOXFCN9QT5RoASBKT14YJYHTjwWu1tvGOpCv0+wunnFkAdU4dNXV1NLZQuEHUR88J4g=="],
 
     "@sindresorhus/is": ["@sindresorhus/is@7.2.0", "", {}, "sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw=="],
 

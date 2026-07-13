@@ -8,7 +8,6 @@
 // ./assets by wrangler's [site] config and referenced at /static/..., so the
 // minified output overwrites the source (CI builds from a fresh checkout).
 
-import { rename, unlink } from 'node:fs/promises'
 import { Glob } from 'bun'
 import { bundleJs, processCss } from '@screenly-labs/signage-kit/build'
 import { run as syncFonts } from './sync-fonts.js'
@@ -20,15 +19,12 @@ await syncFonts()
 // shim); the kit's bundleJs inlines those and lowers modern syntax to the shared
 // ES2017 floor, emitting a self-executing classic script (iife) with no
 // `export`/`import` token — loadable by every cached HTML variant so a deploy
-// never strands cached pages. bundleJs refuses to overwrite its own input, so it
-// writes a temp bundle that we then move over the in-place entry.
+// never strands cached pages. bundleJs now overwrites the in-place entry directly
+// (allowOverwrite), so we bundle straight over the source with no temp file.
 const jsEntry = 'assets/static/js/main.js'
-const jsTmp = 'assets/static/js/main.bundle.js'
 try {
-  await bundleJs(jsEntry, jsTmp)
-  await rename(jsTmp, jsEntry)
+  await bundleJs(jsEntry, jsEntry)
 } catch (error) {
-  await unlink(jsTmp).catch(() => {})
   console.error('✗ Failed to build assets/static/js/main.js')
   console.error(error)
   process.exit(1)
