@@ -21,6 +21,25 @@ const Layout = (props) => html`<!DOCTYPE html>
         type="font/woff2"
         crossorigin
       />
+      <!-- Degraded mode for older/weaker signage players. Runs before the
+           stylesheet so html.legacy is set on the first paint: flags the device
+           as legacy when the browser engine is old (missing a 2020-era feature)
+           or the hardware looks weak, then the stylesheet drops all animation. -->
+      <script>
+        (function () {
+          try {
+            var slow =
+              (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+              (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
+            var old =
+              !('replaceChildren' in Element.prototype) ||
+              !(window.CSS && CSS.supports && CSS.supports('color', 'color-mix(in oklab, red, blue)'))
+            if (slow || old) document.documentElement.className += ' legacy'
+          } catch (e) {
+            document.documentElement.className += ' legacy'
+          }
+        })()
+      </script>
       <link rel="stylesheet" href="/static/styles/main.css?v=${props.v}" />
       ${props.sentryId
         ? html`<script
