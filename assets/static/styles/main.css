@@ -7,29 +7,9 @@
    no interaction, graceful day → night.
    ========================================================================= */
 
-/* ---- Webfonts: self-hosted, vendored from Bun-managed @fontsource ---------
-   (see sync-fonts.js). Variable "standard" axis = optical-size + weight. */
-@font-face {
-  font-family: "Fraunces";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("/static/fonts/fraunces-latin-standard-normal.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Fraunces";
-  font-style: italic;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("/static/fonts/fraunces-latin-standard-italic.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Hanken Grotesk";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("/static/fonts/hanken-grotesk-latin-wght-normal.woff2") format("woff2");
-}
+/* Webfonts (@font-face) and the standardized footer badge (.brand) come from
+   @screenly-labs/signage-kit — build.js prepends styles/fonts.css + styles/brand.css
+   before down-leveling. This file keeps the app's own tokens, reset, and styles. */
 
 /* Registered so the time-of-day accent can interpolate on change. */
 @property --accent {
@@ -166,8 +146,7 @@ body[data-period="night"] {
 }
 
 .masthead,
-.stage,
-.cta-wrap {
+.stage {
   position: relative;
   z-index: 2;
 }
@@ -208,9 +187,7 @@ body[data-period="night"] {
 /* Metadata sits in the corners over the brightest part of the dawn/dusk sky;
    a soft dark halo keeps it legible there without darkening the layout. */
 .eyebrow,
-.masthead-date,
-.cta-msg,
-.cta-url {
+.masthead-date {
   text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
 }
 
@@ -345,60 +322,6 @@ body[data-period="night"] {
 }
 
 /* =========================================================================
-   Rotating Screenly CTA (shown only on non-Screenly devices)
-   Non-interactive: a digital sign has no cursor/touch, so the screenly.io
-   mark is the destination a viewer reads and types in themselves.
-   ========================================================================= */
-.cta-wrap {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.upgrade-banner {
-  display: none;
-}
-
-.upgrade-banner.visible {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.4rem;
-}
-
-.cta-msg {
-  font-size: max(12px, 0.84rem);
-  letter-spacing: 0.015em;
-  color: var(--ink-dim);
-  white-space: nowrap;
-  transition:
-    opacity 0.45s ease,
-    transform 0.45s ease;
-}
-
-.cta-msg.is-out {
-  opacity: 0;
-  transform: translateY(-0.25em);
-}
-
-.cta-lockup {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6em;
-}
-
-.cta-logo {
-  block-size: 1.05rem;
-  inline-size: auto;
-  filter: drop-shadow(0 0.05em 0.4em rgb(0 0 0 / 0.45));
-}
-
-.cta-url {
-  font-size: max(12px, 0.66rem);
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--ink-dim);
-}
-
 /* =========================================================================
    Entrance choreography — one staggered reveal on load
    ========================================================================= */
@@ -436,14 +359,6 @@ body[data-period="night"] {
   .time {
     font-size: clamp(4rem, 22vmin, 16rem);
   }
-
-  .cta-wrap {
-    justify-content: flex-start;
-  }
-
-  .upgrade-banner.visible {
-    align-items: flex-start;
-  }
 }
 
 /* =========================================================================
@@ -464,10 +379,6 @@ body[data-period="night"] {
   .ambient,
   .minute-fill {
     animation: none;
-  }
-
-  .cta-msg {
-    transition: none;
   }
 }
 
