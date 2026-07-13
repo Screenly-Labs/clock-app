@@ -10,9 +10,10 @@ import { build as esbuild } from 'esbuild'
 import { browserslistToTargets, transform as lightningcss } from 'lightningcss'
 import { run as syncFonts } from './sync-fonts.js'
 
-// Single browser-support floor for the whole build: the `browserslist` field in
-// package.json drives both the CSS down-leveling (Lightning CSS) and the JS
-// syntax floor, so old signage players get a build they can actually run. See
+// The `browserslist` field in package.json is the CSS support floor: Lightning
+// CSS down-levels the stylesheet to it. The JS is lowered separately by esbuild to
+// a fixed ES2017 syntax floor (kept at/below the browserslist minimum); esbuild
+// can't read browserslist, so keep the two in sync if you change the floor. See
 // the degraded-mode notes in Layout.jsx / main.css.
 const cssTargets = browserslistToTargets(browserslist())
 
@@ -46,13 +47,19 @@ console.log('✓ JS: assets/static/js/main.js (esbuild, iife, es2017)')
 // minifies in place. url(/static/...) refs are left untouched.
 let count = 1
 for await (const path of new Glob('assets/static/styles/*.css').scan('.')) {
-  const { code } = lightningcss({
-    filename: path,
-    code: await Bun.file(path).bytes(),
-    minify: true,
-    targets: cssTargets
-  })
-  await Bun.write(path, code)
+  try {
+    const { code } = lightningcss({
+      filename: path,
+      code: await Bun.file(path).bytes(),
+      minify: true,
+      targets: cssTargets
+    })
+    await Bun.write(path, code)
+  } catch (error) {
+    console.error(`✗ Failed to build ${path}`)
+    console.error(error)
+    process.exit(1)
+  }
   console.log(`✓ CSS: ${path}`)
   count++
 }
