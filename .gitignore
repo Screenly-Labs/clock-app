@@ -11,3 +11,6 @@ package-lock.json
 
 # Output of 'npm pack'
 *.tgz
+
+# Claude Code local worktrees/artifacts
+.claude/
