@@ -1,4 +1,5 @@
-import { html } from 'hono/html'
+import { GATE } from '@screenly-labs/signage-kit/gate'
+import { html, raw } from 'hono/html'
 
 const Layout = (props) => html`<!DOCTYPE html>
   <html lang="en">
@@ -21,24 +22,9 @@ const Layout = (props) => html`<!DOCTYPE html>
         type="font/woff2"
         crossorigin
       />
-      <!-- Degraded mode for older/weaker signage players. Runs before the
-           stylesheet so html.legacy is set on the first paint: flags the device
-           as legacy when the browser engine is old (no Element.replaceChildren,
-           a 2020-era API) or the hardware looks weak, then the stylesheet drops
-           all animation. classList.add keeps it idempotent. -->
-      <script>
-        (function () {
-          try {
-            var slow =
-              (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
-              (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
-            var old = !('replaceChildren' in Element.prototype)
-            if (slow || old) document.documentElement.classList.add('legacy')
-          } catch (e) {
-            document.documentElement.classList.add('legacy')
-          }
-        })()
-      </script>
+      <!-- Shared degraded-mode gate from @screenly-labs/signage-kit, before the
+           stylesheet so html.legacy is set on the first paint. -->
+      ${raw(GATE)}
       <link rel="stylesheet" href="/static/styles/main.css?v=${props.v}" />
       ${props.sentryId
         ? html`<script
