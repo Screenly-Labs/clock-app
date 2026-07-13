@@ -472,22 +472,11 @@ body[data-period="night"] {
 }
 
 /* =========================================================================
-   Degraded mode — old/weak signage players (html.legacy set by the inline gate
-   in Layout.jsx). Assume the device can't afford animation; drop it entirely.
-   Mirrors the reduced-motion resting state: .anim has a base opacity:0 and only
-   appears via the entrance animation (which the kill-switch removes), so reveal
-   it; ambient/minute/rise motion is then cancelled.
+   Degraded mode — app-specific resting state (html.legacy set by the shared gate
+   from @screenly-labs/signage-kit; the generic animation/transition kill-switch
+   is prepended to the built CSS by the kit). .anim has a base opacity:0 and only
+   appears via the entrance animation the kill-switch removes, so reveal it here.
    ========================================================================= */
 html.legacy .anim {
   opacity: 1;
-}
-html.legacy *,
-html.legacy *::before,
-html.legacy *::after {
-  /* biome-ignore lint/complexity/noImportantStyles: kill-switch must override the entrance/ambient/minute animation rules */
-  animation: none !important;
-  /* biome-ignore lint/complexity/noImportantStyles: kill-switch must override any transition */
-  transition: none !important;
-  /* biome-ignore lint/complexity/noImportantStyles: release GPU layer hints on weak devices */
-  will-change: auto !important;
 }
