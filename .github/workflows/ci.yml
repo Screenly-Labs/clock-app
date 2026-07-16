@@ -2,8 +2,12 @@
 name: CI
 
 on:
+  # `production` is here because a release PR (master -> production) is the last
+  # gate before a deploy that users see, and without it that PR runs no checks at
+  # all — the only status it shows is the stage deploy from the master merge,
+  # which is easy to misread as CI having passed.
   pull_request:
-    branches: [master, main]
+    branches: [master, main, production]
 
 jobs:
   lint-and-test:
