@@ -455,22 +455,26 @@ html.legacy .anim {
   font-size: max(13px, 0.8rem);
   font-weight: 500;
   line-height: 1.35;
-  /* The measure lives here, on the text, so the tag can shrink to it. ~26ch
-     lands the copy on four short lines against the square QR. */
-  max-inline-size: 26ch;
+  /* The measure lives here, on the text, so the tag can shrink to it. 30ch is
+     picked off the rendered line breaks, not by eye: at 24-26ch the copy breaks
+     as "Nobody's updated me in a / while.", orphaning the "a". 30ch resolves to
+     three clean lines with no orphan, and three lines sits better against a
+     square QR than four. Re-check the breaks if the copy changes. */
+  max-inline-size: 30ch;
   text-wrap: balance;
 }
 
 .stale-notice-qr {
   flex: none;
   display: block;
-  /* 4.2rem is the copy's own height (4 lines x 1.35 x 0.8rem), so the code reads
-     as the same weight as the message rather than an afterthought beside it.
-     The 120px floor is a hard scannability limit, not taste: the UTM-tagged URL
-     needs a 41x41 module grid, and under ~3px per module a phone camera cannot
-     resolve it — at 720p (where --root bottoms out, and where most of these old
-     players actually run) a 64px code did not decode at all. */
-  inline-size: max(120px, 4.2rem);
+  /* 3.4rem tracks the copy's own height (3 lines x 1.35 x 0.8rem), so the code
+     reads as the same weight as the message rather than an afterthought beside
+     it. The 120px floor is a hard scannability limit, not taste: the UTM-tagged
+     URL needs a 41x41 module grid, and under ~3px per module a phone camera
+     cannot resolve it — at 720p (where --root bottoms out, and where most of
+     these old players actually run) a 64px code did not decode at all. Below
+     ~1440p the floor is what wins, and the QR sets the tag's height. */
+  inline-size: max(120px, 3.4rem);
   block-size: auto;
   /* The QR is drawn on transparent so it inherits the tag; the quiet zone is
      padding here rather than baked into the SVG, which keeps the module grid
