@@ -3,6 +3,7 @@
 import '@screenly-labs/signage-kit/polyfills'
 import { removeScreenlyBranding } from '@screenly-labs/signage-kit/branding'
 import { detectPlayer } from '@screenly-labs/signage-kit/profiler'
+import { trackPlayer } from './analytics.js'
 import { mountStaleNotice } from './stale-player.js'
 import {
   setLocale,
@@ -67,11 +68,18 @@ import {
     syncMinuteFill()
     renderClock()
     removeScreenlyBranding()
+    // Profile the player once and use it for both consumers below — the two
+    // questions ("should this screen be warned?" and "what is out there?") are
+    // the same detection, and one call keeps them from ever disagreeing.
+    const profile = detectPlayer()
     // Warn old-Anthias viewers that their player is out of date. Client-side on
     // purpose: the SSR page cache is keyed by asset version + country + timezone
     // and carries no user-agent component, so a server-rendered notice would be
     // cached and then served to every player regardless of what it is running.
-    mountStaleNotice(detectPlayer(), document, getAssetVersion())
+    mountStaleNotice(profile, document, getAssetVersion())
+    // Report the same profile to GA4, so the stale-player population we are
+    // warning is measurable rather than assumed.
+    trackPlayer(profile)
   }
 
   // Only auto-run in a real browser; under a test runner there is no document.
