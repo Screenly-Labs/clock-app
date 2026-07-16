@@ -11,7 +11,9 @@
 import { readFileSync } from 'node:fs'
 import { Glob } from 'bun'
 import { bundleJs, processCss } from '@screenly-labs/signage-kit/build'
+import QRCode from 'qrcode'
 import { run as syncFonts } from './sync-fonts.js'
+import { UPGRADE_URL, QR_SRC } from './assets/static/js/stale-player.js'
 
 // Shared chrome CSS from @screenly-labs/signage-kit — the canonical @font-face set
 // and the standardized fixed footer badge. Prepended to this app's raw main.css at
@@ -23,6 +25,30 @@ const sharedCss = ['fonts.css', 'brand.css']
 
 // Vendor the Bun-managed webfonts into ./assets before minifying.
 await syncFonts()
+
+// Generate the stale-player notice's QR code into ./assets. Encoded from
+// UPGRADE_URL in stale-player.js — the same module the notice's alt text reads
+// — so the image and the link it claims to be can never drift apart.
+//
+// Errors at 'M' (~15% recovery): this is scanned off a wall at an angle, in
+// whatever light the room has, so it needs more margin for error than the 'L'
+// default, without the density 'Q'/'H' would add. Rendered black-on-transparent
+// and given its light backing plate by CSS.
+const qrPath = `assets${QR_SRC}`
+try {
+  const svg = await QRCode.toString(UPGRADE_URL, {
+    type: 'svg',
+    errorCorrectionLevel: 'M',
+    margin: 0,
+    color: { dark: '#2a2118ff', light: '#00000000' }
+  })
+  await Bun.write(qrPath, svg)
+} catch (error) {
+  console.error(`✗ Failed to build ${qrPath}`)
+  console.error(error)
+  process.exit(1)
+}
+console.log(`✓ QR: ${qrPath} (${UPGRADE_URL})`)
 
 // main.js is the only JS entry. It imports ./locale.js (and the shared polyfills
 // shim); the kit's bundleJs inlines those and lowers modern syntax to the shared

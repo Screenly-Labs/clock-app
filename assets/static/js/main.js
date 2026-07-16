@@ -2,6 +2,8 @@
 // degraded mode. Must stay first so the shim is in place before any render.
 import '@screenly-labs/signage-kit/polyfills'
 import { removeScreenlyBranding } from '@screenly-labs/signage-kit/branding'
+import { detectPlayer } from '@screenly-labs/signage-kit/profiler'
+import { mountStaleNotice } from './stale-player.js'
 import {
   setLocale,
   setTimeZone,
@@ -23,6 +25,7 @@ import {
 
   const getCountry = () => document.querySelector('#clock-data')?.dataset.country || ''
   const getTimeZone = () => document.querySelector('#clock-data')?.dataset.timezone || ''
+  const getAssetVersion = () => document.querySelector('#clock-data')?.dataset.v || ''
 
   // Sync the pure-CSS minute progress bar to real wall-clock seconds. The bar
   // animates scaleX 0→1 over 60s on a loop; a negative delay offsets it to the
@@ -64,6 +67,11 @@ import {
     syncMinuteFill()
     renderClock()
     removeScreenlyBranding()
+    // Warn old-Anthias viewers that their player is out of date. Client-side on
+    // purpose: the SSR page cache is keyed by asset version + country + timezone
+    // and carries no user-agent component, so a server-rendered notice would be
+    // cached and then served to every player regardless of what it is running.
+    mountStaleNotice(detectPlayer(), document, getAssetVersion())
   }
 
   // Only auto-run in a real browser; under a test runner there is no document.

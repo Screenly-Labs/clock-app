@@ -14,7 +14,7 @@ const App = (props) => {
         <Header v={v} />
         <Footer v={v} />
       </div>
-      <span id="clock-data" data-country={country} data-timezone={timezone} />
+      <span id="clock-data" data-country={country} data-timezone={timezone} data-v={v} />
     </Layout>
   )
 }

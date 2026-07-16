@@ -70,7 +70,8 @@ body {
      it only happens at the 4 period boundaries.) */
   transition: --accent 1.1s ease;
 
-  --sky: radial-gradient(125% 90% at 50% -10%, #2b2f6e 0%, transparent 55%),
+  --sky:
+    radial-gradient(125% 90% at 50% -10%, #2b2f6e 0%, transparent 55%),
     linear-gradient(180deg, #0d1330 0%, #05060f 100%);
 }
 
@@ -82,22 +83,26 @@ body {
 /* ---- Time-of-day reactive accent + sky (data-period set by main.js) ------- */
 body[data-period="dawn"] {
   --accent: #f3a97c;
-  --sky: radial-gradient(125% 90% at 50% -10%, #c06a86 0%, transparent 55%),
+  --sky:
+    radial-gradient(125% 90% at 50% -10%, #c06a86 0%, transparent 55%),
     linear-gradient(180deg, #241d3e 0%, #0e0a1c 100%);
 }
 body[data-period="day"] {
   --accent: #f6c455;
-  --sky: radial-gradient(125% 90% at 50% -10%, #4f7fb0 0%, transparent 58%),
+  --sky:
+    radial-gradient(125% 90% at 50% -10%, #4f7fb0 0%, transparent 58%),
     linear-gradient(180deg, #16284a 0%, #0a1226 100%);
 }
 body[data-period="dusk"] {
   --accent: #e9896b;
-  --sky: radial-gradient(125% 90% at 50% -10%, #d07a4a 0%, transparent 55%),
+  --sky:
+    radial-gradient(125% 90% at 50% -10%, #d07a4a 0%, transparent 55%),
     linear-gradient(180deg, #2a1c30 0%, #100a16 100%);
 }
 body[data-period="night"] {
   --accent: #9aa6f2;
-  --sky: radial-gradient(125% 90% at 50% -10%, #2b2f6e 0%, transparent 55%),
+  --sky:
+    radial-gradient(125% 90% at 50% -10%, #2b2f6e 0%, transparent 55%),
     linear-gradient(180deg, #0a0e24 0%, #05060f 100%);
 }
 
@@ -390,4 +395,91 @@ body[data-period="night"] {
    ========================================================================= */
 html.legacy .anim {
   opacity: 1;
+}
+
+/* =========================================================================
+   Stale-player service tag — shown by main.js only on untagged QtWebEngine
+   players (old Anthias). Deliberately NOT part of the Observatory: the rest of
+   the page is a serene instrument, this is a manila repair tag someone taped
+   onto it, speaking in the player's own voice. So it takes no --accent (the
+   time-of-day colour must not absorb it into the theme), stays in the meta face
+   rather than the clock's Fraunces, and sits still.
+
+   Written for the oldest engine in that bucket (Chromium 83, QtWebEngine 5.15):
+   no :has/nesting/color-mix. Most of these players also match html.legacy, whose
+   kill-switch strips every animation and transition — so the tag is complete at
+   rest and animates nothing, which is right for an unattended wall anyway.
+   ========================================================================= */
+.stale-notice {
+  position: fixed;
+  left: clamp(1rem, 3.2vmin, 2.4rem);
+  bottom: clamp(1rem, 3.2vmin, 2.4rem);
+  /* Above .brand (z-index 2) — a player this old is the one thing on screen
+     that matters more than the badge. */
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+  /* Sized in rem like the rest of the sheet, so the whole tag rides the fluid
+     --root and its parts keep their proportions to each other at any
+     resolution — a vmin scale here would drift against the rem-scaled copy and
+     leave the QR stranded at 4K. */
+  gap: 0.75rem;
+  /* No width of its own — the tag shrink-wraps whatever the copy and QR need.
+     The measure is set on the text instead (see .stale-notice-text): capping the
+     tag here would leave the paragraph box at full width and open a dead gap
+     between the copy and the QR once the lines wrap. */
+  max-inline-size: 92vw;
+  padding: 0.8rem;
+
+  /* Manila stock, and the caution stripe of a condemned-equipment tag along the
+     bound edge. Fixed hex, never var(--accent): this must read as foreign. */
+  background-color: #e6d9b8;
+  border-left: 5px solid #a8431a;
+  border-radius: 2px 4px 4px 2px;
+  /* Lifted off the sky, not floating in it — a real tag casts onto the thing
+     it is stuck to. */
+  box-shadow:
+    0 2px 5px rgb(0 0 0 / 0.3),
+    0 14px 34px rgb(0 0 0 / 0.42);
+  /* The one risk: a tag hangs slightly askew. Small enough to read as physical
+     rather than as a broken transform. */
+  transform: rotate(-1.2deg);
+}
+
+.stale-notice-text {
+  /* Ink on manila, not black on white. */
+  color: #2a2118;
+  font-family: var(--font-meta);
+  /* The px floor keeps the plea readable on a 720p Pi, where --root bottoms out. */
+  font-size: max(13px, 0.8rem);
+  font-weight: 500;
+  line-height: 1.35;
+  /* The measure lives here, on the text, so the tag can shrink to it. 30ch is
+     picked off the rendered line breaks, not by eye: at 24-26ch the copy breaks
+     as "Nobody's updated me in a / while.", orphaning the "a". 30ch resolves to
+     three clean lines with no orphan, and three lines sits better against a
+     square QR than four. Re-check the breaks if the copy changes. */
+  max-inline-size: 30ch;
+  text-wrap: balance;
+}
+
+.stale-notice-qr {
+  flex: none;
+  display: block;
+  /* 3.4rem tracks the copy's own height (3 lines x 1.35 x 0.8rem), so the code
+     reads as the same weight as the message rather than an afterthought beside
+     it. The 120px floor is a hard scannability limit, not taste: the UTM-tagged
+     URL needs a 41x41 module grid, and under ~3px per module a phone camera
+     cannot resolve it — at 720p (where --root bottoms out, and where most of
+     these old players actually run) a 64px code did not decode at all. Below
+     ~1440p the floor is what wins, and the QR sets the tag's height. */
+  inline-size: max(120px, 3.4rem);
+  block-size: auto;
+  /* The QR is drawn on transparent so it inherits the tag; the quiet zone is
+     padding here rather than baked into the SVG, which keeps the module grid
+     crisp at any size. */
+  padding: 0.2rem;
+  background-color: #f4ecd8;
+  border-radius: 2px;
 }
