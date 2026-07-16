@@ -16,15 +16,17 @@
   },
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.2",
+    "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.3",
     "hono": "^4.12.27"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.1",
     "@cloudflare/workers-types": "^4.20260623.1",
+    "@happy-dom/global-registrator": "^20.10.6",
     "browserslist": "^4.28.6",
     "esbuild": "^0.28.1",
     "lightningcss": "^1.32.0",
+    "qrcode": "^1.5.4",
     "wrangler": "^4.104.0"
   }
 }
