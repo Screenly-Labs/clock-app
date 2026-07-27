@@ -6,7 +6,7 @@
       "name": "clock-app",
       "dependencies": {
         "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.7.3",
-        "hono": "^4.12.27",
+        "hono": "^4.12.32",
       },
       "devDependencies": {
         "@biomejs/biome": "^2.5.1",
@@ -187,7 +187,7 @@
 
     "@poppinss/exception": ["@poppinss/exception@1.2.3", "", {}, "sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw=="],
 
-    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#079188f", { "dependencies": { "@fontsource-variable/bricolage-grotesque": "^5.2.10", "@fontsource-variable/fraunces": "^5.2.9", "@fontsource-variable/hanken-grotesk": "^5.2.8", "@fontsource-variable/jetbrains-mono": "^5.2.8", "@fontsource-variable/newsreader": "^5.2.10", "@fontsource/space-mono": "^5.2.9" }, "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-079188f", "sha512-vonA+XyyGs03eN9LVQdWB2gS5oBXUj08LdITRL1ocyp5iTuCzPC0+BUMnY6FitVyfU+nL+Ws7Uq6ZWkGHz3ZSQ=="],
+    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#079188f", { "dependencies": { "@fontsource-variable/bricolage-grotesque": "^5.2.10", "@fontsource-variable/fraunces": "^5.2.9", "@fontsource-variable/hanken-grotesk": "^5.2.8", "@fontsource-variable/jetbrains-mono": "^5.2.8", "@fontsource-variable/newsreader": "^5.2.10", "@fontsource/space-mono": "^5.2.9" }, "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-079188f"],
 
     "@sindresorhus/is": ["@sindresorhus/is@7.2.0", "", {}, "sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw=="],
 
@@ -249,7 +249,7 @@
 
     "happy-dom": ["happy-dom@20.10.6", "", { "dependencies": { "@types/node": ">=20.0.0", "@types/whatwg-mimetype": "^3.0.2", "@types/ws": "^8.18.1", "buffer-image-size": "^0.6.4", "entities": "^7.0.1", "whatwg-mimetype": "^3.0.0", "ws": "^8.21.0" } }, "sha512-6QD0ilzDDt93tX44y8tbmZdAcdTRYDhUP+Asgi6pC8Pp5IA3cvaZGyoVN/EGtlq9ziT65iPuBBn3ASLr6hCgVw=="],
 
-    "hono": ["hono@4.12.27", "", {}, "sha512-1yrb/+w6HWQJrUCLkJ2IF5jNIPvvFkblV5RNOYl6bV+OA6p9GLcMpHFFGTosSvHvcAUibuUukRqhlYI4z32C7Q=="],
+    "hono": ["hono@4.12.32", "", {}, "sha512-XcuyW9qE2kJn07PkecMOBd5Vq/hMy7mmGw+idz1yblbg9N17ijJODrvPkn7/dwL3Kulj8LcRJ69DLOWf91dRUg=="],
 
     "is-fullwidth-code-point": ["is-fullwidth-code-point@3.0.0", "", {}, "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg=="],
 
