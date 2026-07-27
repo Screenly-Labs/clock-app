@@ -3,8 +3,8 @@ name: Deploy Prod
 
 on:
   push:
-    branches:
-      - production
+    tags:
+      - '[0-9][0-9][0-9][0-9].*'
 
 jobs:
   deploy:
