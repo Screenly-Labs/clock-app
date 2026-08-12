@@ -5,7 +5,7 @@
     "": {
       "name": "clock-app",
       "dependencies": {
-        "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.8.2",
+        "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.8.4",
         "hono": "^4.12.33",
       },
       "devDependencies": {
@@ -191,7 +191,7 @@
 
     "@poppinss/exception": ["@poppinss/exception@1.2.3", "", {}, "sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw=="],
 
-    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#311c80e", { "dependencies": { "@fontsource-variable/bricolage-grotesque": "^5.3.0", "@fontsource-variable/fraunces": "^5.3.0", "@fontsource-variable/hanken-grotesk": "^5.3.0", "@fontsource-variable/jetbrains-mono": "^5.3.0", "@fontsource-variable/newsreader": "^5.3.0", "@fontsource/space-mono": "^5.3.0" }, "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-311c80e", "sha512-A2OirCgceGKUROxHKs0RJ9TOY77NLKS6Ieonq30C28L6ggUdzb1eI6GPS182AYacr7Keqr0pk0vrBHpOHq5UZg=="],
+    "@screenly-labs/signage-kit": ["@screenly-labs/signage-kit@github:Screenly-Labs/signage-kit#6320e6f", { "dependencies": { "@fontsource-variable/bricolage-grotesque": "^5.3.0", "@fontsource-variable/fraunces": "^5.3.0", "@fontsource-variable/hanken-grotesk": "^5.3.0", "@fontsource-variable/jetbrains-mono": "^5.3.0", "@fontsource-variable/newsreader": "^5.3.0", "@fontsource/space-mono": "^5.3.0" }, "peerDependencies": { "@csstools/postcss-cascade-layers": "^6", "browserslist": "^4", "esbuild": "^0.28", "lightningcss": "^1.32", "postcss": "^8" }, "optionalPeers": ["@csstools/postcss-cascade-layers", "postcss"] }, "Screenly-Labs-signage-kit-6320e6f", "sha512-X4N5lwyqxr60ZTrBB6aeiXKMsSu5iXMQ4Wdn/ZpPpG9Rmo6rqLKK1JGZogJcJWOIyBio3Kkfatt+sDVyqz7ZRA=="],
 
     "@sindresorhus/is": ["@sindresorhus/is@7.2.0", "", {}, "sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw=="],
 
