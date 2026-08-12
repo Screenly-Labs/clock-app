@@ -3,8 +3,9 @@
 import '@screenly-labs/signage-kit/polyfills'
 import { removeScreenlyBranding } from '@screenly-labs/signage-kit/branding'
 import { detectPlayer } from '@screenly-labs/signage-kit/profiler'
-import { trackPlayer } from './analytics.js'
-import { mountStaleNotice } from './stale-player.js'
+import { trackPlayer } from '@screenly-labs/signage-kit/analytics'
+import { PLAYER_PROFILE_PATH } from '@screenly-labs/signage-kit/analytics-server'
+import { isStalePlayer, mountStaleNotice } from './stale-player.js'
 import {
   setLocale,
   setTimeZone,
@@ -57,6 +58,36 @@ import {
     clockTimer = setTimeout(renderClock, msToNextMinute + 50)
   }
 
+
+  // Report the player, preferring the Worker's profile over the browser's.
+  //
+  // The notice above deliberately uses the SYNCHRONOUS browser profile: it has to render
+  // immediately and only needs "old Anthias or not", which the user agent already says.
+  // Telemetry can afford to wait and wants the better answer, because only a request
+  // carries X-Requested-With, the one signal that names an Android WebView vendor. The
+  // endpoint is no-store, so it describes THIS screen and not whichever one missed the
+  // page cache.
+  //
+  // player_stale stays an app judgement rather than a kit field, so it goes as `extra`
+  // (event only, since a user property is last-write-wins). It is computed from the
+  // profile actually reported, so an enriched profile gives an enriched verdict.
+  const reportPlayer = async (browserProfile) => {
+    let profile = browserProfile
+    try {
+      const response = await fetch(PLAYER_PROFILE_PATH, { cache: 'no-store' })
+      if (response.ok) profile = await response.json()
+    } catch {
+      // Keep the browser-built profile.
+    }
+    trackPlayer(profile, {
+      app: 'clock',
+      config: {
+        hour_format: new URLSearchParams(window.location.search).get('24h') === '1' ? '24' : 'auto'
+      },
+      extra: { player_stale: String(isStalePlayer(profile)) }
+    })
+  }
+
   const init = () => {
     // Location comes from the Cloudflare edge (country + IANA timezone), so the
     // sign shows the local wall clock even if the device's own clock is wrong.
@@ -77,9 +108,10 @@ import {
     // and carries no user-agent component, so a server-rendered notice would be
     // cached and then served to every player regardless of what it is running.
     mountStaleNotice(profile, document, getAssetVersion())
-    // Report the same profile to GA4, so the stale-player population we are
-    // warning is measurable rather than assumed.
-    trackPlayer(profile)
+    // Report to GA4, so the stale-player population we are warning is measurable
+    // rather than assumed. Telemetry now comes from the kit, so every app reports the
+    // same shape; the local analytics module this replaced was the prototype for it.
+    reportPlayer(profile)
   }
 
   // Only auto-run in a real browser; under a test runner there is no document.
