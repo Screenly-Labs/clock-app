@@ -1,3 +1,5 @@
+import { analyticsBootstrap } from '@screenly-labs/signage-kit/analytics-bootstrap'
+import { PLAYER_PROFILE_PATH } from '@screenly-labs/signage-kit/analytics-server'
 import { GATE } from '@screenly-labs/signage-kit/gate'
 import { html, raw } from 'hono/html'
 
@@ -35,13 +37,7 @@ const Layout = (props) => html`<!DOCTYPE html>
       ${props.gaId
         ? html`<!-- Google tag (gtag.js) -->
           <script async src="https://www.googletagmanager.com/gtag/js?id=${props.gaId}"></script>
-          <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', '${props.gaId}');
-          </script>`
+          ${raw(analyticsBootstrap({ gaId: props.gaId, profilePath: PLAYER_PROFILE_PATH }))}`
         : ''}
       <script src="/static/js/main.js?v=${props.v}" async defer></script>
     </head>
