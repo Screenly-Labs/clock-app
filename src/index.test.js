@@ -114,15 +114,32 @@ describe('Analytics integration (gtag.js / Sentry)', () => {
   it('injects the environment-specific GA measurement ID and Sentry DSN', () => {
     const body = render('production')
     expect(body).toContain(`gtag/js?id=${gaIds.production}`)
-    expect(body).toContain(`gtag('config', '${gaIds.production}')`)
+    expect(body).toContain(`gtag('config', '${gaIds.production}'`)
     expect(body).toContain(`https://js.sentry-cdn.com/${sentryIds.production}.min.js`)
   })
 
   it('uses the stage IDs under the stage environment', () => {
     const body = render('stage')
     expect(body).toContain(`gtag/js?id=${gaIds.stage}`)
-    expect(body).toContain(`gtag('config', '${gaIds.stage}')`)
+    expect(body).toContain(`gtag('config', '${gaIds.stage}'`)
     expect(body).toContain(`https://js.sentry-cdn.com/${sentryIds.stage}.min.js`)
+  })
+
+  it('pins the GA4 client_id to the device rather than the _ga cookie', () => {
+    // GA4's own client_id churns on these players, so it does not identify a screen. The kit
+    // bootstrap fetches the no-store profile route and configures with the device-derived id.
+    const body = render('production')
+    expect(body).toContain("fetch('/api/player'")
+    expect(body).toContain('cfg.client_id = clientId')
+    // Never baked into this HTML: it is edge-cached with no per-screen component, so a rendered
+    // id would be handed to every screen that hit the cache afterwards.
+    expect(body).not.toMatch(/client_id['"]?\s*[:=]\s*['"][0-9]+\.[0-9]+['"]/)
+  })
+
+  it('still configures if the profile fetch stalls, so a screen never goes silent', () => {
+    const body = render('production')
+    expect(body).toContain('setTimeout')
+    expect(body).toContain('catch')
   })
 
   it('omits the GA and Sentry tags entirely when ENV is unset', () => {
