@@ -99,6 +99,11 @@ app.get('/', async (c) => {
 // (yodeck, pisignage, xogo, iadea and friends) that header is the only thing that names
 // the vendor. If this response were ever cached, every screen would inherit whichever
 // player happened to warm it and the census would silently collapse onto one vendor.
-app.get(PLAYER_PROFILE_PATH, (c) => playerProfileResponse(c.req.raw))
+//
+// Naming the app here is what gets the page view attributed: the payload then carries
+// ready-made user properties, which the inline bootstrap sets BEFORE gtag('config') fires
+// the automatic page_view. Without it the first page view under any client_id has no player
+// fields, and a screen that mints a fresh id every load never attributes one at all.
+app.get(PLAYER_PROFILE_PATH, (c) => playerProfileResponse(c.req.raw, { app: 'clock' }))
 
 export default app
