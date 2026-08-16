@@ -16,7 +16,7 @@
   },
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.8.9",
+    "@screenly-labs/signage-kit": "github:Screenly-Labs/signage-kit#2026.8.11",
     "hono": "^4.12.33"
   },
   "devDependencies": {
