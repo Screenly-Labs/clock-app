@@ -20,13 +20,13 @@
     "hono": "^4.13.13"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.15",
-    "@cloudflare/workers-types": "^5.20261016.1",
-    "@happy-dom/global-registrator": "^21.0.3",
-    "browserslist": "^4.29.3",
+    "@biomejs/biome": "^2.6.2",
+    "@cloudflare/workers-types": "^5.20261023.1",
+    "@happy-dom/global-registrator": "^21.0.4",
+    "browserslist": "^4.29.4",
     "esbuild": "^0.28.2",
     "lightningcss": "^1.33.0",
     "qrcode": "^1.5.4",
-    "wrangler": "^4.151.1"
+    "wrangler": "^4.152.0"
   }
 }
